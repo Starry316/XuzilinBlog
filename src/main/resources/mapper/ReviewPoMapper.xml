@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xuzilin.blog.dao.ReviewPoMapper">
+  <resultMap id="BaseResultMap" type="cn.xuzilin.blog.po.ReviewPo">
+    <id column="review_id" jdbcType="BIGINT" property="review_id" />
+    <result column="article_id" jdbcType="BIGINT" property="article_id" />
+    <result column="user_id" jdbcType="BIGINT" property="user_id" />
+    <result column="review_time" jdbcType="TIMESTAMP" property="review_time" />
+    <result column="reply_id" jdbcType="BIGINT" property="reply_id" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="cn.xuzilin.blog.po.ReviewPo">
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    review_id, article_id, user_id, review_time, reply_id
+  </sql>
+  <sql id="Blob_Column_List">
+    content
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from reviews
+    where review_id = #{review_id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from reviews
+    where review_id = #{review_id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.xuzilin.blog.po.ReviewPo">
+    insert into reviews (review_id, article_id, user_id, 
+      review_time, reply_id, content
+      )
+    values (#{review_id,jdbcType=BIGINT}, #{article_id,jdbcType=BIGINT}, #{user_id,jdbcType=BIGINT}, 
+      #{review_time,jdbcType=TIMESTAMP}, #{reply_id,jdbcType=BIGINT}, #{content,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.xuzilin.blog.po.ReviewPo">
+    insert into reviews
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="review_id != null">
+        review_id,
+      </if>
+      <if test="article_id != null">
+        article_id,
+      </if>
+      <if test="user_id != null">
+        user_id,
+      </if>
+      <if test="review_time != null">
+        review_time,
+      </if>
+      <if test="reply_id != null">
+        reply_id,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="review_id != null">
+        #{review_id,jdbcType=BIGINT},
+      </if>
+      <if test="article_id != null">
+        #{article_id,jdbcType=BIGINT},
+      </if>
+      <if test="user_id != null">
+        #{user_id,jdbcType=BIGINT},
+      </if>
+      <if test="review_time != null">
+        #{review_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reply_id != null">
+        #{reply_id,jdbcType=BIGINT},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.xuzilin.blog.po.ReviewPo">
+    update reviews
+    <set>
+      <if test="article_id != null">
+        article_id = #{article_id,jdbcType=BIGINT},
+      </if>
+      <if test="user_id != null">
+        user_id = #{user_id,jdbcType=BIGINT},
+      </if>
+      <if test="review_time != null">
+        review_time = #{review_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reply_id != null">
+        reply_id = #{reply_id,jdbcType=BIGINT},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where review_id = #{review_id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.xuzilin.blog.po.ReviewPo">
+    update reviews
+    set article_id = #{article_id,jdbcType=BIGINT},
+      user_id = #{user_id,jdbcType=BIGINT},
+      review_time = #{review_time,jdbcType=TIMESTAMP},
+      reply_id = #{reply_id,jdbcType=BIGINT},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where review_id = #{review_id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.xuzilin.blog.po.ReviewPo">
+    update reviews
+    set article_id = #{article_id,jdbcType=BIGINT},
+      user_id = #{user_id,jdbcType=BIGINT},
+      review_time = #{review_time,jdbcType=TIMESTAMP},
+      reply_id = #{reply_id,jdbcType=BIGINT}
+    where review_id = #{review_id,jdbcType=BIGINT}
+  </update>
+</mapper>

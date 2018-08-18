@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xuzilin.blog.dao.ArticlePoMapper">
+  <resultMap id="BaseResultMap" type="cn.xuzilin.blog.po.ArticlePo">
+    <id column="article_id" jdbcType="BIGINT" property="article_id" />
+    <result column="user_id" jdbcType="BIGINT" property="user_id" />
+    <result column="written_time" jdbcType="TIMESTAMP" property="written_time" />
+    <result column="read_times" jdbcType="INTEGER" property="read_times" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="cn.xuzilin.blog.po.ArticlePo">
+    <result column="title" jdbcType="LONGVARCHAR" property="title" />
+    <result column="article" jdbcType="LONGVARCHAR" property="article" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    article_id, user_id, written_time, read_times
+  </sql>
+  <sql id="Blob_Column_List">
+    title, article
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from articles
+    where article_id = #{article_id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from articles
+    where article_id = #{article_id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.xuzilin.blog.po.ArticlePo">
+    insert into articles (article_id, user_id, written_time, 
+      read_times, title, article
+      )
+    values (#{article_id,jdbcType=BIGINT}, #{user_id,jdbcType=BIGINT}, #{written_time,jdbcType=TIMESTAMP}, 
+      #{read_times,jdbcType=INTEGER}, #{title,jdbcType=LONGVARCHAR}, #{article,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.xuzilin.blog.po.ArticlePo">
+    insert into articles
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="article_id != null">
+        article_id,
+      </if>
+      <if test="user_id != null">
+        user_id,
+      </if>
+      <if test="written_time != null">
+        written_time,
+      </if>
+      <if test="read_times != null">
+        read_times,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="article != null">
+        article,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="article_id != null">
+        #{article_id,jdbcType=BIGINT},
+      </if>
+      <if test="user_id != null">
+        #{user_id,jdbcType=BIGINT},
+      </if>
+      <if test="written_time != null">
+        #{written_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="read_times != null">
+        #{read_times,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="article != null">
+        #{article,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.xuzilin.blog.po.ArticlePo">
+    update articles
+    <set>
+      <if test="user_id != null">
+        user_id = #{user_id,jdbcType=BIGINT},
+      </if>
+      <if test="written_time != null">
+        written_time = #{written_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="read_times != null">
+        read_times = #{read_times,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="article != null">
+        article = #{article,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where article_id = #{article_id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.xuzilin.blog.po.ArticlePo">
+    update articles
+    set user_id = #{user_id,jdbcType=BIGINT},
+      written_time = #{written_time,jdbcType=TIMESTAMP},
+      read_times = #{read_times,jdbcType=INTEGER},
+      title = #{title,jdbcType=LONGVARCHAR},
+      article = #{article,jdbcType=LONGVARCHAR}
+    where article_id = #{article_id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.xuzilin.blog.po.ArticlePo">
+    update articles
+    set user_id = #{user_id,jdbcType=BIGINT},
+      written_time = #{written_time,jdbcType=TIMESTAMP},
+      read_times = #{read_times,jdbcType=INTEGER}
+    where article_id = #{article_id,jdbcType=BIGINT}
+  </update>
+</mapper>

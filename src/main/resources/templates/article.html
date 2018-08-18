@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/Hover.css" type="text/css" />
+    <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/css/font-awesome.css" rel="stylesheet"/>
+    <script src="/js/jquery-3.2.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/vue.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/js/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+    <style>
+
+        .starry-nav ul {
+            display: flex;
+            position: relative;
+            margin-top: 0px;
+            margin-bottom: 10px;
+        }
+        .starry-nav li {
+            list-style-type: none;
+            position: relative;
+            padding: 5px 10px;
+            font-size: 18px;
+            color: white;
+            line-height: 1.5;
+            transition: 0.2s all linear;
+            cursor: pointer;
+        }
+        .starry-nav li::before {
+            content:"";
+            position: absolute;
+            top: 0;
+            left: 100%;
+            width: 0;
+            height: 100%;
+            border-bottom: 2px solid white;
+            transition: 0.2s all linear;
+        }
+        .starry-nav li:hover::before {
+            width: 100%;
+            top: 0;
+            left: 0;
+            transition-delay: 0.1s;
+            border-bottom-color: white;
+            z-index: -1;
+        }
+        .starry-nav li:hover ~ li::before {
+            left: 0;
+        }
+        .starry-nav li:active {
+            background: white;
+            color: black;
+        }
+        .starry-active {
+            background: white;
+            color: black;
+        }
+        .starry-middle{
+            vertical-align: middle;!important;
+            text-align: center;
+        }
+        .starry-header {
+            margin: 0;
+            background-image: url("/img/img_0004.jpg");
+            padding-top: 10px;
+            top: 0;
+            left: 0;
+            right: 0;
+            position: fixed;
+        }
+        .starry-header-shadow {
+            box-shadow: 0px 5px 30px gray;
+        }
+        .starry-overlayTransparent {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #000;
+            opacity: 0;
+            z-index: -2;
+        }
+        .starry-showOverlay {
+            z-index: 10!important;
+            animation: overlayShow .5s ease-out forwards;
+        }
+        .starry-options {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 1;
+            padding: 30px;
+            width: 40%;
+            background-color: white;
+            border-radius: 3px;
+            z-index: -2;
+            overflow: hidden;
+            opacity: 0;
+            transition: .2s;
+            box-shadow: 0px 5px 30px black;
+        }
+        .starry-show {
+            z-index: 9999!important;
+            animation: optionShow .5s ease-out forwards;
+        }
+        .starry-article {
+            position: relative;
+            background-color: white;
+            z-index: -1;
+            margin: 70px 30% 0 5%;
+            padding: 20px;
+            box-shadow: 0px 5px 30px gray;
+            line-height: 2;
+            border-radius: 10px;
+        }
+        .starry-article h1{
+            margin-bottom: 1rem;
+        }
+        .starry-right-float{
+            position: absolute;
+            top: 270px;
+            left: 73%;
+            width: 20%;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0px 5px 30px gray;
+            border-radius: 10px;
+        }
+        .starry-right-float-fixed{
+            top: 70px;
+            position: fixed;
+
+        }
+        .starry-return-top{
+            position: fixed;
+            bottom: 20px;
+            left: 73%;
+            width: 5%;
+            text-align:center;
+            background-color: #555555;
+            border-radius: 10px;
+            color: white;
+        }
+        .starry-container{
+            background-color: #f3f3f3;
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin: 0;
+            z-index: -1;
+        }
+        .starry-zoomImage{
+            width:100%;
+            height:0;
+            padding-bottom: 100%;
+            background-position: center center;
+            background-repeat: no-repeat;
+            -webkit-background-size:cover;
+            -moz-background-size:cover;
+            background-size:cover;
+        }
+        @keyframes optionShow {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        @keyframes overlayShow {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: .3;
+            }
+        }
+        @keyframes floatMove {
+            from{
+                top: 50px;
+            }
+            to {
+                top: 70px;
+            }
+        }
+        @media screen and (max-width: 500px) {
+            .starry-options {
+                position: fixed;
+                margin: 10px 5px;
+                opacity: 1;
+                padding: 10px;
+                width: 80%;
+                height: 50%;
+                border-radius: 3px;
+                z-index: -2;
+                overflow: scroll;
+                opacity: 0;
+                transition: .2s;
+                box-shadow: 0px 0px 30px black;
+            }
+            .starry-nav ul{
+                position: relative;
+                float: right;
+                right: 0;
+
+            }
+            .starry-article {
+                display: block;
+                margin: 60px 0 0 0;
+                padding: 20px 5px;
+                line-height: 2;
+                border-radius: 0px;
+                box-shadow: 0px 0px 0px black;
+            }
+            .starry-right-float{
+                position: relative;
+                top: 0;
+                left: 2%;
+                width: 85%;
+                margin: 20px 0;
+                background-color: white;
+                padding: 20px;
+                box-shadow: 0px 0px 1px gray;
+            }
+
+            .starry-right-float-fixed{
+
+            }
+            .starry-return-top{
+                position: fixed;
+                bottom: 10px;
+                left: 79%;
+                width: 10%;
+                opacity: .8;
+                text-align:center;
+                background-color: #555555;
+                border-radius: 10px;
+                color: white;
+            }
+        }
+
+    </style>
+</head>
+<body>
+<div id="app">
+    <div id ="header" class="starry-nav starry-header">
+        <ul>
+            <li>博客</li>
+            <li>标签</li>
+            <li onclick="show()">登录</li>
+        </ul>
+    </div>
+    <!--登录弹窗-->
+    <div id = "overlay" onclick="show()" class="starry-overlayTransparent"></div>
+    <div id = "option" class="starry-options">
+        <h2>登录</h2>
+        <br>
+        <div class="form-group">
+            <label>用户名：</label>
+            <input class="form-control"  placeholder="用户名">
+        </div>
+        <div class="form-group">
+            <label>密码：</label>
+            <input class="form-control"  placeholder="密码">
+        </div>
+        <a>还没有账号？点击注册</a>
+        <div class="starry-middle">
+            <button type="button" class="btn btn-primary">确认</button>
+            <button type="button" class="btn btn-danger" >关闭</button>
+        </div>
+    </div>
+    <!--登录弹窗结束-->
+
+    <div class="container-fluid">
+        <!--文章-->
+        <div class="starry-article">
+            <h1>{{title}}</h1>
+            <h4>发表于 {{written_time}}</h4>
+            <span v-html="article"></span>
+        </div>
+        <!--文章结束-->
+        <!--右边栏-->
+        <div id = "right-float" class="starry-right-float">
+            <h4>这里是右边栏</h4>
+            <p>
+                这里是右边栏
+                这里是右边栏
+                这里是右边栏
+                这里是右边栏
+            </p>
+            <p>
+                这里是右边栏
+                这里是右边栏
+                这里是右边栏
+                这里是右边栏
+            </p>
+            <p>
+                这里是右边栏
+                这里是右边栏
+                这里是右边栏
+                这里是右边栏
+            </p>
+        </div>
+        <!--右边栏结束-->
+        <a href="#" rel="hover-shadow" class="button float-shadow starry-return-top">TOP</a>
+    </div>
+</div>
+</body>
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            article:'qeqweqeqweqwe',
+            article_id:'',
+            title:'qweqweq',
+            written_time:'2016-8-10',
+            read_times:''
+        },
+        methods: {
+            //搜索
+            search(){
+                let reqData = {
+
+                };
+                this.$http.post('/search', reqData)
+                    .then(response => {
+                    let result = response.body;
+                if (result.status === 200) {
+                    this.list = result.data;
+                } else {
+                    alert(result.message);
+                }
+            })
+            .catch(resp => {
+                    alert("请求失败，请稍后再试");
+            });
+            },
+        },
+        mounted() {
+        },
+        created() {
+            let url = window.location.href;
+            let splitUrl = url.split("/");
+            let id = splitUrl[splitUrl.length-1];
+            this.$http.get("/getArticle/"+id)
+                .then(resp => {
+                let result = resp.body;
+            if (result.status === 200) {
+                let data = result.data;
+                this.article = data.article;
+                this.article_id = data.article_id;
+                this.written_time = data.written_time;
+                this.title = data.title;
+            }
+        });
+        }
+    });
+    var isShow = false;
+    function show(){
+        if(!isShow){
+            $("#option").addClass("starry-show");
+            $("#overlay").addClass("starry-showOverlay");
+            isShow=true;
+        }
+        else {
+            $("#option").removeClass("starry-show");
+            $("#overlay").removeClass("starry-showOverlay");
+            isShow=false;
+        }
+    }
+    $(document).ready(function(){
+        $(window).scroll(function (event) {
+            if ($(window).scrollTop() > 20) {
+                $("#header").addClass("starry-header-shadow");
+            }
+            else{
+                $("#header").removeClass("starry-header-shadow");
+            }
+            if ($(window).scrollTop() > 200) {
+                console.log("yes!");
+                $("#right-float").addClass("starry-right-float-fixed");
+            }
+            else{
+                $("#right-float").removeClass("starry-right-float-fixed");
+            }
+        });
+    });
+
+
+</script>
+</html>
