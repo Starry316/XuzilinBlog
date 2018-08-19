@@ -29,7 +29,7 @@ public class ArticleController {
      * @param page
      * @return
      */
-    @GetMapping("/articlelist/{page}")
+    @GetMapping("/articleList/{page}")
     public ResponseVo getArticleList(@PathVariable("page") int page){
         JSONArray respData = articleService.getArticleListByPage(page);
         return ResponseUtil.success("success",respData);
@@ -58,6 +58,12 @@ public class ArticleController {
         boolean respData = articleService.checkAuthor(id,userId);
         return ResponseUtil.success("success",respData);
     }
+
+    @GetMapping("/getMaxPage")
+    public ResponseVo getMaxPage(){
+        int respData = articleService.getMaxPage();
+        return ResponseUtil.success("success",respData);
+    }
     /**
      * 上传新文章
      * @param request
@@ -83,8 +89,8 @@ public class ArticleController {
             return ResponseUtil.error("您不是该文章的作者！话说你是怎么进来这里的？");
         articleService.updatePassage(Long.parseLong(id),title,text);
         return ResponseUtil.success("success");
-
     }
+
     @PostMapping("/uploadPicture")
     public String contentFileUpload(MultipartFile picture) {
         if (picture!=null && picture.getOriginalFilename()!=null && picture.getOriginalFilename().trim().length()>0) {

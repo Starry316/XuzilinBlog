@@ -20,4 +20,7 @@ public interface UserPoMapper {
     @Select("SELECT * FROM user WHERE user_name = #{userName}")
     UserPo selectByUserName(@Param("userName")String userName);
 
+    @Select("SELECT user_name FROM user WHERE user_id = #{userId}")
+    String selectUserNameByUserId(@Param("userId")long userId);
+
 }

@@ -24,6 +24,7 @@
             position: relative;
             margin-top: 0px;
             margin-bottom: 10px;
+
         }
         .starry-nav li {
             list-style-type: none;
@@ -51,7 +52,6 @@
             left: 0;
             transition-delay: 0.1s;
             border-bottom-color: white;
-            z-index: -1;
         }
         .starry-nav li:hover ~ li::before {
             left: 0;
@@ -76,7 +76,7 @@
             left: 0;
             right: 0;
             position: fixed;
-            z-index: 2;
+            z-index: 3;
         }
         .starry-header-shadow {
             box-shadow: 0px 5px 30px gray;
@@ -176,12 +176,12 @@
             background-size:cover;
         }
         .starry-footer{
-
-            height: 50px;
+            margin-top: 30px;
+            height: 70px;
 
         }
         .starry-wrapper{
-            min-height: calc(100vh - 70px);
+            min-height: calc(100vh - 80px);
         }
         @keyframes optionShow {
             from {
@@ -268,12 +268,12 @@
 <div id="app" class="starry-wrapper">
     <div id="header" class=" starry-header starry-nav container-fluid">
         <div class="row">
-            <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8"> <ul>
+            <div class="col-xs-11 col-sm-8 col-md-8 col-lg-8"> <ul>
                 <li>博客</li>
-                <li>写文章</li>
+                <li @click="turnToWrite">写文章</li>
                 <li @click="show">{{loginText}}</li>
             </ul></div>
-            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"></div>
+            <div class="col-xs-1 col-sm-3 col-md-3 col-lg-3"></div>
         </div>
     </div>
     <!--登录弹窗-->
@@ -484,6 +484,13 @@
             .catch(resp => {
                     alert("请求失败，请稍后再试");
             });
+            },
+            turnToWrite(){
+                if (!this.isLogin){
+                    this.show();
+                    return;
+                }
+                window.location.href="/write";
             }
         },
         mounted() {

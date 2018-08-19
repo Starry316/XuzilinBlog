@@ -23,4 +23,6 @@ public interface ArticlePoMapper {
     @Select("SELECT * FROM articles")
     List<ArticlePo> selectAll();
 
+    @Select("SELECT COUNT(*) FROM articles ")
+    int selectCount();
 }

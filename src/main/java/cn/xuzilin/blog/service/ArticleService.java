@@ -1,7 +1,9 @@
 package cn.xuzilin.blog.service;
 
 import cn.xuzilin.blog.dao.ArticlePoMapper;
+import cn.xuzilin.blog.dao.UserPoMapper;
 import cn.xuzilin.blog.po.ArticlePo;
+import cn.xuzilin.blog.po.UserPo;
 import cn.xuzilin.blog.util.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -18,9 +20,18 @@ public class ArticleService {
     @Resource
     private ArticlePoMapper articlePoMapper;
 
+    @Resource
+    private UserPoMapper userPoMapper;
+
     public JSONArray getArticleListByPage(int page){
         List<ArticlePo> list = selectAllByPage(page);
-        JSONArray jsonArray = JSON.parseArray(JSON.toJSONString(list));
+        JSONArray jsonArray = new JSONArray();
+        for (ArticlePo i : list){
+            String userName = userPoMapper.selectUserNameByUserId(i.getUser_id());
+            JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(i));
+            jsonObject.put("userName",userName);
+            jsonArray.add(jsonObject);
+        }
         return jsonArray;
     }
 
@@ -66,5 +77,8 @@ public class ArticleService {
         articlePo.setArticle_id(id);
         articlePoMapper.updateByPrimaryKeySelective(articlePo);
         return articlePo.getArticle_id();
+    }
+    public int getMaxPage(){
+        return (articlePoMapper.selectCount()+19)/20;
     }
 }
