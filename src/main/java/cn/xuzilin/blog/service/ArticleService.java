@@ -32,6 +32,17 @@ public class ArticleService {
         return jsonObject;
     }
 
+    /**
+     * 检测用户是否为作者
+     * @param id
+     * @param userId
+     * @return
+     */
+    public boolean checkAuthor(long id ,long userId){
+        ArticlePo articlePo = articlePoMapper.selectByPrimaryKey(id);
+        return userId == articlePo.getUser_id();
+    }
+
     public List<ArticlePo> selectAllByPage(int page){
         PageHelper.startPage(page, 20);
         List<ArticlePo> list = articlePoMapper.selectAll();
@@ -46,6 +57,14 @@ public class ArticleService {
         articlePo.setUser_id(userId);
         articlePo.setWritten_time(new Date());
         articlePoMapper.insertSelective(articlePo);
+        return articlePo.getArticle_id();
+    }
+    public long updatePassage(long id ,String title,String text){
+        ArticlePo articlePo = new ArticlePo();
+        articlePo.setTitle(title);
+        articlePo.setArticle(text);
+        articlePo.setArticle_id(id);
+        articlePoMapper.updateByPrimaryKeySelective(articlePo);
         return articlePo.getArticle_id();
     }
 }

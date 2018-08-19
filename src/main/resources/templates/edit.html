@@ -375,7 +375,7 @@
                     .then(response => {
                     let result = response.body;
                 if (result.status === 200) {
-                    window.location.href="/article/"+result.data;
+                    window.location.href="/article/"+this.article_id;
                 } else {
                     alert(result.message);
                 }

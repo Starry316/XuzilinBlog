@@ -264,7 +264,7 @@
         <div class="row">
             <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8"> <ul>
                 <li>博客</li>
-                <li>写文章</li>
+                <li href="/write">写文章</li>
                 <li @click="show">{{loginText}}</li>
             </ul></div>
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"></div>
@@ -397,8 +397,23 @@
             edit(){
                 window.location.href="/edit/"+this.article_id;
             },
+            checkAuthor(){
+                this.$http.get('/checkAuthor/'+this.article_id)
+                    .then(response => {
+                    let result = response.body;
+                if (result.status === 200) {
+                    if (result.data)
+                        $('#editPage').removeClass('starry-hide');
+                } else {
+                    this.isLogin = false;
+                }
+            })
+            .catch(resp => {
+                    this.isLogin = false;
+            });
+            },
             //查看是否登录
-            checkLogin(){
+            checkLogin() {
                 this.$http.get('/checkLogin')
                     .then(response => {
                     let result = response.body;
@@ -407,7 +422,7 @@
                     console.log(this.isLogin);
                     this.userName = result.data;
                     this.loginText = result.data;
-                    $('#editPage').removeClass('starry-hide');
+                    this.checkAuthor();
                 } else {
                     this.isLogin = false;
                 }

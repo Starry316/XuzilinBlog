@@ -47,6 +47,18 @@ public class ArticleController {
     }
 
     /**
+     * 检测用户是否为作者
+     * @param request
+     * @param id
+     * @return
+     */
+    @GetMapping("/checkAuthor/{id}")
+    public ResponseVo checkAuthor(HttpServletRequest request,@PathVariable("id") long id){
+        long userId = SessionUtil.get(request,"userToken",UserPo.class).getUser_id();
+        boolean respData = articleService.checkAuthor(id,userId);
+        return ResponseUtil.success("success",respData);
+    }
+    /**
      * 上传新文章
      * @param request
      * @param map
@@ -60,6 +72,18 @@ public class ArticleController {
         String text = map.get("text");
         long respData = articleService.saveArticle(title,text,userPo.getUser_id());
         return ResponseUtil.success("success",respData);
+    }
+    @PostMapping("/updatePassage")
+    public ResponseVo updatePassage(HttpServletRequest request , @RequestBody Map<String,String> map){
+        String title = map.get("title");
+        String text = map.get("text");
+        String id = map.get("id");
+        UserPo userPo = SessionUtil.get(request,"userToken",UserPo.class);
+        if (!articleService.checkAuthor(Long.parseLong(id),userPo.getUser_id()))
+            return ResponseUtil.error("您不是该文章的作者！话说你是怎么进来这里的？");
+        articleService.updatePassage(Long.parseLong(id),title,text);
+        return ResponseUtil.success("success");
+
     }
     @PostMapping("/uploadPicture")
     public String contentFileUpload(MultipartFile picture) {
