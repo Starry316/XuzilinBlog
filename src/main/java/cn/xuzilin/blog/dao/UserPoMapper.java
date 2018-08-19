@@ -1,6 +1,8 @@
 package cn.xuzilin.blog.dao;
 
 import cn.xuzilin.blog.po.UserPo;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 public interface UserPoMapper {
     int deleteByPrimaryKey(Long user_id);
@@ -14,4 +16,8 @@ public interface UserPoMapper {
     int updateByPrimaryKeySelective(UserPo record);
 
     int updateByPrimaryKey(UserPo record);
+
+    @Select("SELECT * FROM user WHERE user_name = #{userName}")
+    UserPo selectByUserName(@Param("userName")String userName);
+
 }

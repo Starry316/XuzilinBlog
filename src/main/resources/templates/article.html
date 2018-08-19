@@ -18,6 +18,7 @@
             position: relative;
             margin-top: 0px;
             margin-bottom: 10px;
+
         }
         .starry-nav li {
             list-style-type: none;
@@ -45,7 +46,6 @@
             left: 0;
             transition-delay: 0.1s;
             border-bottom-color: white;
-            z-index: -1;
         }
         .starry-nav li:hover ~ li::before {
             left: 0;
@@ -70,11 +70,13 @@
             left: 0;
             right: 0;
             position: fixed;
+            z-index: 3;
         }
         .starry-header-shadow {
             box-shadow: 0px 5px 30px gray;
         }
         .starry-overlayTransparent {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
@@ -84,7 +86,11 @@
             opacity: 0;
             z-index: -2;
         }
+        .starry-hide{
+            display: none;
+        }
         .starry-showOverlay {
+            display: block;
             z-index: 10!important;
             animation: overlayShow .5s ease-out forwards;
         }
@@ -97,7 +103,7 @@
             padding: 30px;
             width: 40%;
             background-color: white;
-            border-radius: 3px;
+            border-radius: 10px;
             z-index: -2;
             overflow: hidden;
             opacity: 0;
@@ -111,7 +117,6 @@
         .starry-article {
             position: relative;
             background-color: white;
-            z-index: -1;
             margin: 70px 30% 0 5%;
             padding: 20px;
             box-shadow: 0px 5px 30px gray;
@@ -123,7 +128,7 @@
         }
         .starry-right-float{
             position: absolute;
-            top: 270px;
+            top: 100px;
             left: 73%;
             width: 20%;
             background-color: white;
@@ -163,6 +168,14 @@
             -webkit-background-size:cover;
             -moz-background-size:cover;
             background-size:cover;
+        }
+        .starry-footer{
+            margin-top: 30px;
+            height: 70px;
+
+        }
+        .starry-wrapper{
+            min-height: calc(100vh - 80px);
         }
         @keyframes optionShow {
             from {
@@ -205,7 +218,6 @@
             }
             .starry-nav ul{
                 position: relative;
-                float: right;
                 right: 0;
 
             }
@@ -247,40 +259,71 @@
     </style>
 </head>
 <body>
-<div id="app">
-    <div id ="header" class="starry-nav starry-header">
-        <ul>
-            <li>博客</li>
-            <li>标签</li>
-            <li onclick="show()">登录</li>
-        </ul>
+<div id="app" class="starry-wrapper">
+    <div id="header" class=" starry-header starry-nav container-fluid">
+        <div class="row">
+            <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8"> <ul>
+                <li>博客</li>
+                <li>写文章</li>
+                <li @click="show">{{loginText}}</li>
+            </ul></div>
+            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"></div>
+        </div>
     </div>
     <!--登录弹窗-->
-    <div id = "overlay" onclick="show()" class="starry-overlayTransparent"></div>
+    <div id = "overlay" @click="show" class="starry-overlayTransparent"></div>
     <div id = "option" class="starry-options">
-        <h2>登录</h2>
-        <br>
-        <div class="form-group">
-            <label>用户名：</label>
-            <input class="form-control"  placeholder="用户名">
+        <!--登录显示的页面-->
+        <div id="loginPage">
+            <h2>登录</h2>
+            <br>
+            <div class="form-group">
+                <label>用户名：</label>
+                <input class="form-control" v-model="userName" placeholder="用户名">
+            </div>
+            <div class="form-group">
+                <label>密码：</label>
+                <input class="form-control" v-model="pass" placeholder="密码">
+            </div>
+            <a @click="changeToSignPage">还没有账号？点击注册</a>
+            <div class="starry-middle">
+                <button type="button" class="btn btn-primary" @click="login">确认</button>
+                <button type="button" class="btn btn-danger" @click="show">关闭</button>
+            </div>
         </div>
-        <div class="form-group">
-            <label>密码：</label>
-            <input class="form-control"  placeholder="密码">
+        <!--登录显示页面结束-->
+        <!--注册显示页面-->
+        <div id="signUpPage" class="starry-hide">
+            <h2>注册</h2>
+            <br>
+            <div class="form-group">
+                <label>用户名：</label>
+                <input class="form-control"  v-model="userName"  placeholder="用户名">
+            </div>
+            <div class="form-group">
+                <label>密码：</label>
+                <input class="form-control"  v-model="pass" placeholder="密码">
+            </div>
+            <a @click="changeToLoginPage">已经有账号了？点击去登录</a>
+            <div class="starry-middle">
+                <button type="button" class="btn btn-primary" @click="signUp">确认</button>
+                <button type="button" class="btn btn-danger" @click="show">关闭</button>
+            </div>
         </div>
-        <a>还没有账号？点击注册</a>
-        <div class="starry-middle">
-            <button type="button" class="btn btn-primary">确认</button>
-            <button type="button" class="btn btn-danger" >关闭</button>
-        </div>
+        <!--注册显示页面结束-->
+
     </div>
     <!--登录弹窗结束-->
 
     <div class="container-fluid">
         <!--文章-->
-        <div class="starry-article">
+        <div class="  container-fluid starry-article">
             <h1>{{title}}</h1>
-            <h4>发表于 {{written_time}}</h4>
+            <div class="row">
+                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"><h4>发表于 {{written_time}}</h4></div>
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6"></div>
+                <div id="editPage" class="starry-hide"><p @click="edit">修改</p>&nbsp;<p @click="deleteThis">删除</p></div>
+            </div>
             <span v-html="article"></span>
         </div>
         <!--文章结束-->
@@ -309,29 +352,40 @@
         <!--右边栏结束-->
         <a href="#" rel="hover-shadow" class="button float-shadow starry-return-top">TOP</a>
     </div>
+
+</div>
+<div class="container-fluid starry-middle starry-footer">
+    <p>@Author 徐子林 <a href="https://github.com/Starry316">@GitHub</a></p>
+    <p> <a href="http://www.miitbeian.gov.cn">鲁ICP备18016956号</a></p>
 </div>
 </body>
 <script>
     let app = new Vue({
         el: '#app',
         data: {
-            article:'qeqweqeqweqwe',
+            article:'文章标题',
             article_id:'',
             title:'qweqweq',
             written_time:'2016-8-10',
-            read_times:''
+            read_times:'',
+            isShow:false,
+            loginText:'登录',
+
+            //登录数据
+            userName:'',
+            pass:'',
+            islogin:false
         },
         methods: {
-            //搜索
-            search(){
+            deleteThis(){
                 let reqData = {
-
+                    articleId : this.article_id
                 };
-                this.$http.post('/search', reqData)
+                this.$http.post('/delete', reqData)
                     .then(response => {
                     let result = response.body;
                 if (result.status === 200) {
-                    this.list = result.data;
+                    window.location.href="www.xuzilin.cn";
                 } else {
                     alert(result.message);
                 }
@@ -340,6 +394,90 @@
                     alert("请求失败，请稍后再试");
             });
             },
+            edit(){
+                window.location.href="www.xuzilin.cn/edit/"+this.article_id;
+            },
+            //查看是否登录
+            checkLogin(){
+                this.$http.get('/checkLogin')
+                    .then(response => {
+                    let result = response.body;
+                if (result.status === 200) {
+                    this.isLogin = true;
+                    this.userName = result.data;
+                } else {
+                    this.isLogin = false;
+                }
+            })
+            .catch(resp => {
+                    this.isLogin = false;
+            });
+                if (this.isLogin)
+                    this.loginText = this.userName;
+            },
+            changeToSignPage(){
+                $('#loginPage').addClass('starry-hide');
+                $('#signUpPage').removeClass('starry-hide');
+                this.pass = '';
+                this.userName = '';
+            },
+            changeToLoginPage(){
+                $('#loginPage').removeClass('starry-hide');
+                $('#signUpPage').addClass('starry-hide');
+                this.pass = '';
+                this.userName = '';
+            },
+            show(){
+                if (this.isLogin) return;
+                if(!this.isShow){
+                    $("#option").addClass("starry-show");
+                    $("#overlay").addClass("starry-showOverlay");
+                    this.isShow=true;
+                }
+                else {
+                    $("#option").removeClass("starry-show");
+                    $("#overlay").removeClass("starry-showOverlay");
+                    this.isShow=false;
+                }
+            },
+            login(){
+                let reqData = {
+                    userName : this.userName,
+                    pass : this.pass
+                };
+                this.$http.post('/login', reqData)
+                    .then(response => {
+                    let result = response.body;
+                if (result.status === 200) {
+                    this.checkLogin();
+                    this.show();
+                } else {
+                    alert(result.message);
+                }
+            })
+            .catch(resp => {
+                    alert("请求失败，请稍后再试");
+            });
+            },
+            signUp(){
+                let reqData = {
+                    userName : this.userName,
+                    pass : this.pass
+                };
+                this.$http.post('/signUp', reqData)
+                    .then(response => {
+                    let result = response.body;
+                if (result.status === 200) {
+                    this.checkLogin();
+                    this.show();
+                } else {
+                    alert(result.message);
+                }
+            })
+            .catch(resp => {
+                    alert("请求失败，请稍后再试");
+            });
+            }
         },
         mounted() {
         },
@@ -358,21 +496,9 @@
                 this.title = data.title;
             }
         });
+            this.checkLogin();
         }
     });
-    var isShow = false;
-    function show(){
-        if(!isShow){
-            $("#option").addClass("starry-show");
-            $("#overlay").addClass("starry-showOverlay");
-            isShow=true;
-        }
-        else {
-            $("#option").removeClass("starry-show");
-            $("#overlay").removeClass("starry-showOverlay");
-            isShow=false;
-        }
-    }
     $(document).ready(function(){
         $(window).scroll(function (event) {
             if ($(window).scrollTop() > 20) {
@@ -381,7 +507,7 @@
             else{
                 $("#header").removeClass("starry-header-shadow");
             }
-            if ($(window).scrollTop() > 200) {
+            if ($(window).scrollTop() > 30) {
                 console.log("yes!");
                 $("#right-float").addClass("starry-right-float-fixed");
             }
