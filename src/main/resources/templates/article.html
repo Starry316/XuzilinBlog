@@ -501,6 +501,7 @@
             let url = window.location.href;
             let splitUrl = url.split("/");
             let id = splitUrl[splitUrl.length-1];
+            this.article_id = id;
             this.$http.get("/getArticle/"+id)
                 .then(resp => {
                 let result = resp.body;
