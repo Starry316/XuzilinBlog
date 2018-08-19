@@ -29,7 +29,7 @@
     delete from articles
     where article_id = #{article_id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="cn.xuzilin.blog.po.ArticlePo">
+  <insert id="insert" parameterType="cn.xuzilin.blog.po.ArticlePo" useGeneratedKeys="true" keyProperty="article_id">
     insert into articles (article_id, user_id, written_time, 
       read_times, title, article
       )
@@ -37,7 +37,7 @@
       #{read_times,jdbcType=INTEGER}, #{title,jdbcType=LONGVARCHAR}, #{article,jdbcType=LONGVARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="cn.xuzilin.blog.po.ArticlePo">
+  <insert id="insertSelective" parameterType="cn.xuzilin.blog.po.ArticlePo" useGeneratedKeys="true" keyProperty="article_id">
     insert into articles
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="article_id != null">
@@ -80,7 +80,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.xuzilin.blog.po.ArticlePo">
+  <update id="updateByPrimaryKeySelective" parameterType="cn.xuzilin.blog.po.ArticlePo"  useGeneratedKeys="true" keyProperty="article_id">
     update articles
     <set>
       <if test="user_id != null">

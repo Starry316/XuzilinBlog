@@ -21,23 +21,31 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/login")
-    public ResponseVo login (@RequestBody Map<String ,String> map){
+    public ResponseVo login (HttpServletRequest request,@RequestBody Map<String ,String> map){
         String userName = map.get("userName");
         String pass = map.get("pass");
         boolean res = userService.login(userName,pass);
-        if (res)
+        if (res){
+            UserPo userPo = userService.selectByUserName(userName);
+            SessionUtil.save(request,"userToken",userPo);
             return ResponseUtil.success("success");
+        }
+
         return ResponseUtil.error("登录失败，用户名或密码错误");
     }
     @PostMapping("/signUp")
-    public ResponseVo signUp (@RequestBody Map<String ,String> map){
+    public ResponseVo signUp (HttpServletRequest request,@RequestBody Map<String ,String> map){
         String userName = map.get("userName");
         String pass = map.get("pass");
         boolean res = userService.checkUserNameUnique(userName);
         if (!res) return ResponseUtil.error("用户名已经被使用！");
         res = userService.signUp(userName,pass);
-        if (res)
+        if (res){
+            UserPo userPo = userService.selectByUserName(userName);
+            SessionUtil.save(request,"userToken",userPo);
             return ResponseUtil.success("success");
+        }
+
         return ResponseUtil.error("注册失败！");
     }
 
@@ -46,6 +54,6 @@ public class UserController {
         UserPo userPo = SessionUtil.get(request,"userToken",UserPo.class);
         if (userPo == null)
             return ResponseUtil.error("未登录");
-        return ResponseUtil.success("success");
+        return ResponseUtil.success("success",userPo.getUser_name());
     }
 }

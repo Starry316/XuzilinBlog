@@ -23,7 +23,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/img/**").addResourceLocations("classpath:/static/img/");
         registry.addResourceHandler("/fonts/**").addResourceLocations("classpath:/static/fonts/");
         registry.addResourceHandler("/**").addResourceLocations("classpath:/templates/");
-
+        registry.addResourceHandler("/file/**").addResourceLocations("file:/home/ubuntu/blog/upload/");
     }
 
     @Override

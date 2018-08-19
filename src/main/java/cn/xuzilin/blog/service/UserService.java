@@ -30,4 +30,7 @@ public class UserService {
         if (userPo == null) return true;
         return false;
     }
+    public UserPo selectByUserName(String userName){
+        return userPoMapper.selectByUserName(userName);
+    }
 }

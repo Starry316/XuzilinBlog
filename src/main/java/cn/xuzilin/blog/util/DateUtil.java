@@ -12,7 +12,12 @@ public class DateUtil {
         return res;
     }
     public static Date getNowDate() {
-        return strToDate(getNowDateStr());
+        Date currentTime = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateString = formatter.format(currentTime);
+        ParsePosition pos = new ParsePosition(8);
+        Date currentTime_2 = formatter.parse(dateString, pos);
+        return currentTime_2;
     }
     public static Date strToDate(String strDate) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -32,6 +37,21 @@ public class DateUtil {
         return res;
     }
     public static String formatDate(Date date){
-        return dateToStr(date);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateString = formatter.format(date);
+        return dateString;
+    }
+    public static Date strToDateLong(String strDate) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        ParsePosition pos = new ParsePosition(0);
+        Date strtodate = formatter.parse(strDate, pos);
+        return strtodate;
+    }
+    public static Date toDateLong(Date date) {
+        String strDate = formatDate(date);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        ParsePosition pos = new ParsePosition(0);
+        Date strtodate = formatter.parse(strDate, pos);
+        return strtodate;
     }
 }

@@ -11,6 +11,12 @@
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/vue.js" type="text/javascript" charset="utf-8"></script>
     <script src="/js/vue-resource.js" type="text/javascript" charset="utf-8"></script>
+    <!--富文本编辑器-->
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.css" rel="stylesheet">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.js" type="text/javascript" ></script>
+    <script src="includes/summernote/lang/summernote-zh-CN.js" type="text/javascript" ></script>
+
+
     <style>
 
         .starry-nav ul {
@@ -18,7 +24,6 @@
             position: relative;
             margin-top: 0px;
             margin-bottom: 10px;
-
         }
         .starry-nav li {
             list-style-type: none;
@@ -46,6 +51,7 @@
             left: 0;
             transition-delay: 0.1s;
             border-bottom-color: white;
+            z-index: -1;
         }
         .starry-nav li:hover ~ li::before {
             left: 0;
@@ -70,7 +76,7 @@
             left: 0;
             right: 0;
             position: fixed;
-            z-index: 3;
+            z-index: 2;
         }
         .starry-header-shadow {
             box-shadow: 0px 5px 30px gray;
@@ -170,12 +176,12 @@
             background-size:cover;
         }
         .starry-footer{
-            margin-top: 30px;
-            height: 70px;
+
+            height: 50px;
 
         }
         .starry-wrapper{
-            min-height: calc(100vh - 80px);
+            min-height: calc(100vh - 70px);
         }
         @keyframes optionShow {
             from {
@@ -318,13 +324,15 @@
     <div class="container-fluid">
         <!--文章-->
         <div class="  container-fluid starry-article">
-            <h1>{{title}}</h1>
-            <div class="row">
-                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"><h4>发表于 {{written_time}}</h4></div>
-                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-5"></div>
-                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3"><div id="editPage" class="starry-hide"><span @click="edit">修改</span>&nbsp;<span @click="deleteThis">删除</span></div></div>
+            <div class="input-group">
+                <span class="input-group-addon">文章标题</span>
+                <input type="text" class="form-control" id="passageTitle"  v-model="title" placeholder="title">
             </div>
-            <span v-html="article"></span>
+            <br>
+            <div id="summernote"></div>
+            <button class="btn btn-primary pull-right" @click="uploadPassage">提交</button>
+
+
         </div>
         <!--文章结束-->
         <!--右边栏-->
@@ -363,9 +371,8 @@
     let app = new Vue({
         el: '#app',
         data: {
-            article:'文章标题',
-            article_id:'',
-            title:'qweqweq',
+            text:'',
+            title:'',
             written_time:'2016-8-10',
             read_times:'',
             isShow:false,
@@ -377,15 +384,17 @@
             islogin:false
         },
         methods: {
-            deleteThis(){
+            uploadPassage(){
+                this.text = $('#summernote').summernote('code');
                 let reqData = {
-                    articleId : this.article_id
+                    title : this.title,
+                    text : this.text
                 };
-                this.$http.post('/delete', reqData)
+                this.$http.post('/uploadPassage', reqData)
                     .then(response => {
                     let result = response.body;
                 if (result.status === 200) {
-                    window.location.href="www.xuzilin.cn";
+                    window.location.href="/article/"+result.data;
                 } else {
                     alert(result.message);
                 }
@@ -393,9 +402,6 @@
             .catch(resp => {
                     alert("请求失败，请稍后再试");
             });
-            },
-            edit(){
-                window.location.href="/edit/"+this.article_id;
             },
             //查看是否登录
             checkLogin(){
@@ -483,20 +489,6 @@
         mounted() {
         },
         created() {
-            let url = window.location.href;
-            let splitUrl = url.split("/");
-            let id = splitUrl[splitUrl.length-1];
-            this.$http.get("/getArticle/"+id)
-                .then(resp => {
-                let result = resp.body;
-            if (result.status === 200) {
-                let data = result.data;
-                this.article = data.article;
-                this.article_id = data.article_id;
-                this.written_time = data.written_time;
-                this.title = data.title;
-            }
-        });
             this.checkLogin();
         }
     });
@@ -516,6 +508,72 @@
                 $("#right-float").removeClass("starry-right-float-fixed");
             }
         });
+    });
+
+    $(document).ready(function() {
+        $('#summernote').summernote();
+    });
+    $('#summernote').summernote({
+        height: 300,                 // 定义编辑框高度
+        minHeight: 100,             // 定义编辑框最低的高度
+        maxHeight: 300,
+        toolbar: [
+            <!--字体工具-->
+            ['fontname', ['fontname']], //字体系列
+            ['style', ['bold', 'italic', 'underline', 'clear']], // 字体粗体、字体斜体、字体下划线、字体格式清除
+            ['font', ['strikethrough', 'superscript', 'subscript']], //字体划线、字体上标、字体下标
+            ['fontsize', ['fontsize']], //字体大小
+            ['color', ['color']], //字体颜色
+
+            <!--段落工具-->
+            ['style', ['style']],//样式
+            ['para', ['ul', 'ol', 'paragraph']], //无序列表、有序列表、段落对齐方式
+            ['height', ['height']], //行高
+
+            <!--插入工具-->
+            ['table',['table']], //插入表格
+            ['hr',['hr']],//插入水平线
+            ['link',['link']], //插入链接
+            ['picture',['picture']], //插入图片
+            ['video',['video']], //插入视频
+
+            <!--其它-->
+            ['fullscreen',['fullscreen']], //全屏
+            ['codeview',['codeview']], //查看html代码
+            ['undo',['undo']], //撤销
+            ['redo',['redo']], //取消撤销
+            ['help',['help']], //帮助
+        ],// 定义编辑框最高德高度
+        lang:'zh-CN',  //设置中文，需引入中文插件summernote-zh-CN.js
+        placeholder: 'write here...', //占位符
+        dialogsInBody: true,  //对话框放在编辑框还是Body
+
+        dialogsFade: true ,//对话框显示效果
+
+        disableDragAndDrop: true ,//禁用拖放功能
+
+        shortcuts: false ,//禁用快捷键
+        callbacks: {
+            onImageUpload: function(file) {
+                var formData = new FormData();
+                formData.append("picture", file[0]);
+                $.ajax({
+                    type:'post',
+                    url:'/uploadPicture',
+                    cache: false,
+                    data:formData,
+                    processData: false,
+                    contentType: false,
+                    dataType:'text', //请求成功后，后台返回图片访问地址字符串，故此以text格式获取，而不是json格式
+                    success: function(picture) {
+                        $('#summernote').summernote('insertImage',picture);
+                    },
+                    error:function(){
+                        alert("上传失败");
+                    }
+                });
+            }
+        }
     });
 
 

@@ -33,6 +33,7 @@ public class Interceptors implements HandlerInterceptor {
          *         request.getRequestURI() ，返回包含工程名的当前页面全路径：/project/course/index.jsp。
          */
         String url = request.getServletPath();
+        System.out.println("访问 url："+url);
         //不需要登录的路径
         if (!(url.hashCode() == "/edit".hashCode())){
             return true;
