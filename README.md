@@ -9,5 +9,6 @@
 3. 文章列表页面
 ![博客页面](http://www.xuzilin.cn/file/images/blog-4.png)
 4. 移动端页面
+
 ![博客页面](http://www.xuzilin.cn/file/images/blog-3.png)
 
