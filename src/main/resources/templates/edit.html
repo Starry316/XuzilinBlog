@@ -351,7 +351,7 @@
                             <input type="text" class="form-control" id="passageTitle"  v-model="title" placeholder="title">
                         </div>
                         <br>
-                        <div id="summernote"><span v-html="text" v-once></span></div>
+                        <div id="summernote"><span v-html="text"></span></div>
                         <button class="btn btn-primary pull-right" @click="uploadPassage">提交</button>
                     </div>
                 </div>
@@ -367,6 +367,7 @@
 </div>
 </body>
 <script>
+    var loadComplete = false;
     let app = new Vue({
         el: '#app',
         data: {
@@ -518,75 +519,83 @@
                 this.text = data.article;
                 this.article_id = data.article_id;
                 this.title = data.title;
+                loadComplete = true;
             }
         });
             this.checkLogin();
+
         }
     });
+    var checkLoad= setInterval(function(){
+        console.log(loadComplete);
+            if (!loadComplete) return;
+            $('#summernote').summernote({
+                height: 300,                 // 定义编辑框高度
+                minHeight: 100,             // 定义编辑框最低的高度
+                maxHeight: 300,
+                toolbar: [
+                    <!--字体工具-->
+                    ['fontname', ['fontname']], //字体系列
+                    ['style', ['bold', 'italic', 'underline', 'clear']], // 字体粗体、字体斜体、字体下划线、字体格式清除
+                    ['font', ['strikethrough', 'superscript', 'subscript']], //字体划线、字体上标、字体下标
+                    ['fontsize', ['fontsize']], //字体大小
+                    ['color', ['color']], //字体颜色
 
-    $(document).ready(function () {
-        $('#summernote').summernote({
-            height: 300,                 // 定义编辑框高度
-            minHeight: 100,             // 定义编辑框最低的高度
-            maxHeight: 300,
-            toolbar: [
-                <!--字体工具-->
-                ['fontname', ['fontname']], //字体系列
-                ['style', ['bold', 'italic', 'underline', 'clear']], // 字体粗体、字体斜体、字体下划线、字体格式清除
-                ['font', ['strikethrough', 'superscript', 'subscript']], //字体划线、字体上标、字体下标
-                ['fontsize', ['fontsize']], //字体大小
-                ['color', ['color']], //字体颜色
+                    <!--段落工具-->
+                    ['style', ['style']],//样式
+                    ['para', ['ul', 'ol', 'paragraph']], //无序列表、有序列表、段落对齐方式
+                    ['height', ['height']], //行高
 
-                <!--段落工具-->
-                ['style', ['style']],//样式
-                ['para', ['ul', 'ol', 'paragraph']], //无序列表、有序列表、段落对齐方式
-                ['height', ['height']], //行高
+                    <!--插入工具-->
+                    ['table',['table']], //插入表格
+                    ['hr',['hr']],//插入水平线
+                    ['link',['link']], //插入链接
+                    ['picture',['picture']], //插入图片
+                    ['video',['video']], //插入视频
 
-                <!--插入工具-->
-                ['table',['table']], //插入表格
-                ['hr',['hr']],//插入水平线
-                ['link',['link']], //插入链接
-                ['picture',['picture']], //插入图片
-                ['video',['video']], //插入视频
+                    <!--其它-->
+                    ['fullscreen',['fullscreen']], //全屏
+                    ['codeview',['codeview']], //查看html代码
+                    ['undo',['undo']], //撤销
+                    ['redo',['redo']], //取消撤销
+                    ['help',['help']], //帮助
+                ],// 定义编辑框最高德高度
+                lang:'zh-CN',  //设置中文，需引入中文插件summernote-zh-CN.js
+                placeholder: 'write here...', //占位符
+                dialogsInBody: true,  //对话框放在编辑框还是Body
 
-                <!--其它-->
-                ['fullscreen',['fullscreen']], //全屏
-                ['codeview',['codeview']], //查看html代码
-                ['undo',['undo']], //撤销
-                ['redo',['redo']], //取消撤销
-                ['help',['help']], //帮助
-            ],// 定义编辑框最高德高度
-            lang:'zh-CN',  //设置中文，需引入中文插件summernote-zh-CN.js
-            placeholder: 'write here...', //占位符
-            dialogsInBody: true,  //对话框放在编辑框还是Body
+                dialogsFade: true ,//对话框显示效果
 
-            dialogsFade: true ,//对话框显示效果
+                disableDragAndDrop: true ,//禁用拖放功能
 
-            disableDragAndDrop: true ,//禁用拖放功能
-
-            shortcuts: false ,//禁用快捷键
-            callbacks: {
-                onImageUpload: function(file) {
-                    var formData = new FormData();
-                    formData.append("picture", file[0]);
-                    $.ajax({
-                        type:'post',
-                        url:'/uploadPicture',
-                        cache: false,
-                        data:formData,
-                        processData: false,
-                        contentType: false,
-                        dataType:'text', //请求成功后，后台返回图片访问地址字符串，故此以text格式获取，而不是json格式
-                        success: function(picture) {
-                            $('#summernote').summernote('insertImage',picture);
-                        },
-                        error:function(){
-                            alert("上传失败");
+                shortcuts: false ,//禁用快捷键
+                callbacks: {
+                    onImageUpload: function(file) {
+                        var formData = new FormData();
+                        formData.append("picture", file[0]);
+                        $.ajax({
+                            type:'post',
+                            url:'/uploadPicture',
+                            cache: false,
+                            data:formData,
+                            processData: false,
+                            contentType: false,
+                            dataType:'text', //请求成功后，后台返回图片访问地址字符串，故此以text格式获取，而不是json格式
+                            success: function(picture) {
+                                $('#summernote').summernote('insertImage',picture);
+                            },
+                            error:function(){
+                                alert("上传失败");
+                            }
+                        });
                         }
-                    });
-                }
-            }
-        });
+                    }
+                });
+        clearInterval(checkLoad);
+            }, 200);
+
+
+    $(document).ready(function(){
         // 捕获tab事件并且在文章后面增加四个空格
         // (为了实现这个功能我用了两小时)
         $(document).keydown(function(e){
