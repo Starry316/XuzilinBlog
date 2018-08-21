@@ -360,8 +360,8 @@
 
     <div class="container-fluid" style="margin-top: 6rem">
         <div class="row">
-            <div class="col-lg-1 col-md-1 col-sm-1"></div>
-            <div class="col-lg-2 col-lg-push-6 col-md-2 col-md-push-6 col-sm-2 col-sm-push-6 starry-xsdevice-nopadding">
+            <div class="col-lg-1 col-md-1"></div>
+            <div class="col-lg-2 col-lg-push-6 col-md-2 col-md-push-6 col-sm-4 col-sm-push-8 starry-xsdevice-nopadding">
                 <div class="starry-boarder">
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Search for..." v-model="keyword">
@@ -378,7 +378,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-4 starry-xsdevice-nopadding">
+            <div class="col-md-4 col-md-pull-0 col-sm-8 col-sm-pull-4 col-lg-4  col-lg-pull-0 starry-xsdevice-nopadding">
                 <div class="starry-boarder" v-for="item in list">
                     <h3 style="cursor: pointer;" @click="toArticle(item.article_id)">{{item.title}}</h3>
                     <br>
