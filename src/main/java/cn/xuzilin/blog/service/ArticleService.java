@@ -29,6 +29,8 @@ public class ArticleService {
         for (ArticlePo i : list){
             String userName = userPoMapper.selectUserNameByUserId(i.getUser_id());
             JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(i));
+            jsonObject.remove("written_time");
+            jsonObject.put("written_time",DateUtil.formatDate(i.getWritten_time()));
             jsonObject.put("userName",userName);
             jsonArray.add(jsonObject);
         }
@@ -55,7 +57,7 @@ public class ArticleService {
     }
 
     public List<ArticlePo> selectAllByPage(int page){
-        PageHelper.startPage(page, 20);
+        PageHelper.startPage(page, 10);
         List<ArticlePo> list = articlePoMapper.selectAll();
         return list;
     }
@@ -79,6 +81,6 @@ public class ArticleService {
         return articlePo.getArticle_id();
     }
     public int getMaxPage(){
-        return (articlePoMapper.selectCount()+19)/20;
+        return (articlePoMapper.selectCount()+9)/10;
     }
 }
