@@ -306,7 +306,7 @@
     <div id="header" class=" starry-header starry-nav container-fluid">
         <div class="row">
             <div class="col-xs-11 col-sm-8 col-md-8 col-lg-8"> <ul>
-                <li>博客</li>
+                <li @click="turnToArticleList">博客</li>
                 <li @click="turnToWrite">写文章</li>
                 <li @click="show">{{loginText}}</li>
             </ul></div>
@@ -366,8 +366,8 @@
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Search for...">
                         <span class="input-group-btn">
-              <button class="btn btn-default" type="button">搜索</button>
-            </span>
+                        <button class="btn btn-default" type="button">搜索</button>
+                        </span>
                     </div>
                 </div>
                 <div class="thumbnail starry-boarder">
@@ -535,6 +535,9 @@
                 }
                 window.location.href="/write";
             },
+            turnToArticleList(){
+                window.location.href="/articleList";
+            },
             frontPage(){
                 if (this.page == 1)return;
                 $('#'+this.page+'page').removeClass("active");
@@ -589,19 +592,13 @@
 
         mounted() {
             $(window).scroll(function (event) {
-                if ($(window).scrollTop() > 20) {
+                if ($(window).scrollTop() > 5) {
                     $("#header").addClass("starry-header-shadow");
                 }
                 else{
                     $("#header").removeClass("starry-header-shadow");
                 }
-                if ($(window).scrollTop() > 30) {
-                    console.log("yes!");
-                    $("#right-float").addClass("starry-right-float-fixed");
-                }
-                else{
-                    $("#right-float").removeClass("starry-right-float-fixed");
-                }
+
             });
         },
         created() {

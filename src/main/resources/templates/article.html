@@ -210,6 +210,13 @@
         .starry-wrapper{
             min-height: calc(100vh - 80px);
         }
+        .starry-link{
+            cursor: pointer;
+            color: #1db0d8;
+        }
+        .starry-link:hover{
+            color: #37c6c0;
+        }
         @keyframes optionShow {
             from {
                 opacity: 0;
@@ -315,7 +322,7 @@
     <div id="header" class=" starry-header starry-nav container-fluid">
         <div class="row">
             <div class="col-xs-11 col-sm-8 col-md-8 col-lg-8"> <ul>
-                <li>博客</li>
+                <li @click="turnToArticleList">博客</li>
                 <li @click="turnToWrite">写文章</li>
                 <li @click="show">{{loginText}}</li>
             </ul></div>
@@ -374,37 +381,25 @@
             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                 <div class="container-fluid starry-article">
                     <h1>{{title}}</h1>
+                    <br>
                     <div class="row">
-                        <div class="col-xs-11 col-sm-4 col-md-4 col-lg-4"><h4>发表于 {{written_time}}</h4></div>
+                        <div class="col-xs-11 col-sm-4 col-md-4 col-lg-4" style="color: grey"><h4>发表于 {{written_time}}</h4></div>
                         <div class="col-xs-1 col-sm-6 col-md-6 col-lg-5"></div>
-                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3"><div id="editPage" class="starry-hide"><span @click="edit">修改</span>&nbsp;<span @click="deleteThis">删除</span></div></div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3"><div id="editPage" class="starry-hide"><span @click="edit" class="starry-link">修改</span>&nbsp;<span @click="deleteThis" class="starry-link">删除</span></div></div>
                     </div>
+                    <hr class="divider">
                     <span v-html="article"></span>
                 </div>
             </div>
             <!--文章结束-->
             <!--右边栏-->
             <div class="col-sm-2 col-md-2 col-lg-2">
-                <div class="starry-boarder" style="margin-top: 70px">
-                    <h4>这里是右边栏</h4>
-                    <p>
-                        这里是右边栏
-                        这里是右边栏
-                        这里是右边栏
-                        这里是右边栏
-                    </p>
-                    <p>
-                        这里是右边栏
-                        这里是右边栏
-                        这里是右边栏
-                        这里是右边栏
-                    </p>
-                    <p>
-                        这里是右边栏
-                        这里是右边栏
-                        这里是右边栏
-                        这里是右边栏
-                    </p>
+                <div class="thumbnail starry-boarder" style="margin-top: 70px">
+                    <img src="/img/img_0004.jpg" alt="...">
+                    <div class="caption">
+                        <h3>以后做个人展示</h3>
+                        <p>作者信息啥的</p>
+                    </div>
                 </div>
             </div>
             <!--右边栏结束-->
@@ -559,9 +554,20 @@
                     return;
                 }
                 window.location.href="/write";
-            }
+            },
+            turnToArticleList(){
+                window.location.href="/articleList";
+            },
         },
         mounted() {
+            $(window).scroll(function (event) {
+                if ($(window).scrollTop() > 5) {
+                    $("#header").addClass("starry-header-shadow");
+                }
+                else{
+                    $("#header").removeClass("starry-header-shadow");
+                }
+            });
         },
         created() {
             let url = window.location.href;
@@ -579,25 +585,17 @@
                 this.title = data.title;
             }
         });
+            this.$http.get("/updateReadTimes/"+id)
+                .then(resp => {
+                let result = resp.body;
+            if (result.status === 200) {
+                console.log("readTimes update success");
+            }
+        });
             this.checkLogin();
         }
     });
-    $(document).ready(function(){
-        $(window).scroll(function (event) {
-            if ($(window).scrollTop() > 20) {
-                $("#header").addClass("starry-header-shadow");
-            }
-            else{
-                $("#header").removeClass("starry-header-shadow");
-            }
-            if ($(window).scrollTop() > 120) {
-                $("#right-float").addClass("starry-right-float-fixed");
-            }
-            else{
-                $("#right-float").removeClass("starry-right-float-fixed");
-            }
-        });
-    });
+
 
 
 </script>

@@ -23,4 +23,8 @@ public class CommonController {
     public ModelAndView write(){
         return new ModelAndView("write");
     }
+    @RequestMapping("/articleList")
+    public ModelAndView articleList(){
+        return new ModelAndView("articleList");
+    }
 }

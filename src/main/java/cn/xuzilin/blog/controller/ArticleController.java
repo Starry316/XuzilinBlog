@@ -59,10 +59,20 @@ public class ArticleController {
         return ResponseUtil.success("success",respData);
     }
 
+    /**
+     * 获取最大页数
+     * @return
+     */
     @GetMapping("/getMaxPage")
     public ResponseVo getMaxPage(){
         int respData = articleService.getMaxPage();
         return ResponseUtil.success("success",respData);
+    }
+
+    @GetMapping("/updateReadTimes/{id}")
+    public ResponseVo updateReadTimes(@PathVariable("id") long id){
+        articleService.updateReadTimes(id);
+        return ResponseUtil.success("success");
     }
     /**
      * 上传新文章
@@ -83,6 +93,7 @@ public class ArticleController {
     public ResponseVo updatePassage(HttpServletRequest request , @RequestBody Map<String,String> map){
         String title = map.get("title");
         String text = map.get("text");
+        System.out.println(text);
         String id = map.get("id");
         UserPo userPo = SessionUtil.get(request,"userToken",UserPo.class);
         if (!articleService.checkAuthor(Long.parseLong(id),userPo.getUser_id()))

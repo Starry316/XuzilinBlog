@@ -80,6 +80,9 @@ public class ArticleService {
         articlePoMapper.updateByPrimaryKeySelective(articlePo);
         return articlePo.getArticle_id();
     }
+    public void updateReadTimes(long id){
+        articlePoMapper.updateReadTimes(id);
+    }
     public int getMaxPage(){
         return (articlePoMapper.selectCount()+9)/10;
     }
