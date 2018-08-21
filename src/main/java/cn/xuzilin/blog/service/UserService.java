@@ -12,11 +12,24 @@ public class UserService {
     @Resource
     private UserPoMapper userPoMapper;
 
+    /**
+     * 登录
+     * @param userName
+     * @param pass
+     * @return
+     */
     public boolean login(String userName,String pass){
         UserPo userPo = userPoMapper.selectByUserName(userName);
         if (userPo == null) return false;
         return PasswordUtil.validatePassword(pass,userPo.getUser_password());
     }
+
+    /**
+     * 注册
+     * @param userName
+     * @param pass
+     * @return
+     */
     public boolean signUp(String userName,String pass){
         if (!checkUserNameUnique(userName)) return false;
         UserPo userPo= new UserPo();
@@ -25,11 +38,23 @@ public class UserService {
         userPoMapper.insertSelective(userPo);
         return true;
     }
+
+    /**
+     * 检测用户名是否唯一
+     * @param userName
+     * @return
+     */
     public boolean checkUserNameUnique(String userName){
         UserPo userPo = userPoMapper.selectByUserName(userName);
         if (userPo == null) return true;
         return false;
     }
+
+    /**
+     * 通过用户名查询用户
+     * @param userName
+     * @return
+     */
     public UserPo selectByUserName(String userName){
         return userPoMapper.selectByUserName(userName);
     }

@@ -439,7 +439,7 @@
                     .then(response => {
                     let result = response.body;
                 if (result.status === 200) {
-                    window.location.href="www.xuzilin.cn/articlelist";
+                    window.location.href="/articlelist";
                 } else {
                     alert(result.message);
                 }
@@ -583,6 +583,10 @@
                 this.article_id = data.article_id;
                 this.written_time = data.written_time;
                 this.title = data.title;
+            }
+            else {
+                alert(result.message);
+                window.location.href="/articleList";
             }
         });
             this.$http.get("/updateReadTimes/"+id)

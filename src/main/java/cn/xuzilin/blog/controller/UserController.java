@@ -20,6 +20,12 @@ public class UserController {
     @Resource
     private UserService userService;
 
+    /**
+     * 登录
+     * @param request
+     * @param map
+     * @return
+     */
     @PostMapping("/login")
     public ResponseVo login (HttpServletRequest request,@RequestBody Map<String ,String> map){
         String userName = map.get("userName");
@@ -33,6 +39,13 @@ public class UserController {
 
         return ResponseUtil.error("登录失败，用户名或密码错误");
     }
+
+    /**
+     * 注册
+     * @param request
+     * @param map
+     * @return
+     */
     @PostMapping("/signUp")
     public ResponseVo signUp (HttpServletRequest request,@RequestBody Map<String ,String> map){
         String userName = map.get("userName");
@@ -49,6 +62,11 @@ public class UserController {
         return ResponseUtil.error("注册失败！");
     }
 
+    /**
+     * 检测用户是否登录
+     * @param request
+     * @return
+     */
     @GetMapping("/checkLogin")
     public ResponseVo checkLogin (HttpServletRequest request){
         UserPo userPo = SessionUtil.get(request,"userToken",UserPo.class);

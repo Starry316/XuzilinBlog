@@ -23,6 +23,11 @@ public class ArticleService {
     @Resource
     private UserPoMapper userPoMapper;
 
+    /**
+     * 按页数获取数据并处理数据，返回文章列表
+     * @param page
+     * @return
+     */
     public JSONArray getArticleListByPage(int page){
         List<ArticlePo> list = selectAllByPage(page);
         JSONArray jsonArray = new JSONArray();
@@ -37,8 +42,14 @@ public class ArticleService {
         return jsonArray;
     }
 
+    /**
+     * 通过id获取文章
+     * @param id
+     * @return
+     */
     public JSONObject getArticleById(long id){
         ArticlePo articlePo = articlePoMapper.selectByPrimaryKey(id);
+        if (articlePo == null) return null;
         JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(articlePo));
         jsonObject.remove("written_time");
         jsonObject.put("written_time",DateUtil.formatDate(articlePo.getWritten_time()));
@@ -56,12 +67,24 @@ public class ArticleService {
         return userId == articlePo.getUser_id();
     }
 
+    /**
+     * 按页数查询ArticlePo
+     * @param page
+     * @return
+     */
     public List<ArticlePo> selectAllByPage(int page){
         PageHelper.startPage(page, 10);
         List<ArticlePo> list = articlePoMapper.selectAll();
         return list;
     }
 
+    /**
+     * 保存新的文章
+     * @param title
+     * @param text
+     * @param userId
+     * @return
+     */
     public long saveArticle(String title,String text,long userId){
         ArticlePo articlePo = new ArticlePo();
         articlePo.setRead_times(0);
@@ -72,6 +95,14 @@ public class ArticleService {
         articlePoMapper.insertSelective(articlePo);
         return articlePo.getArticle_id();
     }
+
+    /**
+     * 更新文章
+     * @param id
+     * @param title
+     * @param text
+     * @return
+     */
     public long updatePassage(long id ,String title,String text){
         ArticlePo articlePo = new ArticlePo();
         articlePo.setTitle(title);
@@ -80,9 +111,29 @@ public class ArticleService {
         articlePoMapper.updateByPrimaryKeySelective(articlePo);
         return articlePo.getArticle_id();
     }
+
+    /**
+     * 删除文章
+     * @param id
+     * @return
+     */
+    public int deletePassage(long id ){
+        return articlePoMapper.deleteByPrimaryKey(id);
+    }
+
+    /**
+     * 更新浏览次数
+     * @param id
+     */
     public void updateReadTimes(long id){
         articlePoMapper.updateReadTimes(id);
     }
+
+    /**
+     * 通过关键词搜索文章列表
+     * @param keyword
+     * @return
+     */
     public JSONArray search(String keyword){
         List<ArticlePo> list = articlePoMapper.search(keyword);
         JSONArray jsonArray = new JSONArray();
@@ -96,6 +147,11 @@ public class ArticleService {
         }
         return jsonArray;
     }
+
+    /**
+     * 获取文章最大页数
+     * @return
+     */
     public int getMaxPage(){
         return (articlePoMapper.selectCount()+9)/10;
     }

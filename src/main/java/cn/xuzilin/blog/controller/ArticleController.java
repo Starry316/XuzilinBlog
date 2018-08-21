@@ -43,6 +43,7 @@ public class ArticleController {
     @GetMapping("/getArticle/{id}")
     public ResponseVo getArticle(@PathVariable("id") long id){
         JSONObject respData = articleService.getArticleById(id);
+        if (respData == null) return ResponseUtil.error("该文章不存在！");
         return ResponseUtil.success("success",respData);
     }
 
@@ -69,12 +70,22 @@ public class ArticleController {
         return ResponseUtil.success("success",respData);
     }
 
+    /**
+     * 更新阅读次数，每次进入页面都调用一次
+     * @param id
+     * @return
+     */
     @GetMapping("/updateReadTimes/{id}")
     public ResponseVo updateReadTimes(@PathVariable("id") long id){
         articleService.updateReadTimes(id);
         return ResponseUtil.success("success");
     }
 
+    /**
+     * 按照关键词搜索文章
+     * @param keyword
+     * @return
+     */
     @GetMapping("/search/{keyword}")
     public ResponseVo search(@PathVariable("keyword") String keyword){
         JSONArray respData = articleService.search(keyword);
@@ -95,6 +106,13 @@ public class ArticleController {
         long respData = articleService.saveArticle(title,text,userPo.getUser_id());
         return ResponseUtil.success("success",respData);
     }
+
+    /**
+     * 修改文章
+     * @param request
+     * @param map
+     * @return
+     */
     @PostMapping("/updatePassage")
     public ResponseVo updatePassage(HttpServletRequest request , @RequestBody Map<String,String> map){
         String title = map.get("title");
@@ -108,6 +126,27 @@ public class ArticleController {
         return ResponseUtil.success("success");
     }
 
+    /**
+     * 删除文章
+     * @param request
+     * @param map
+     * @return
+     */
+    @PostMapping("/delete")
+    public ResponseVo delete(HttpServletRequest request , @RequestBody Map<String,String> map){
+        String id = map.get("articleId");
+        UserPo userPo = SessionUtil.get(request,"userToken",UserPo.class);
+        if (!articleService.checkAuthor(Long.parseLong(id),userPo.getUser_id()))
+            return ResponseUtil.error("您不是该文章的作者！");
+        articleService.deletePassage(Long.parseLong(id));
+        return ResponseUtil.success("success");
+    }
+
+    /**
+     * summernote上传图片调用
+     * @param picture
+     * @return
+     */
     @PostMapping("/uploadPicture")
     public String contentFileUpload(MultipartFile picture) {
         if (picture!=null && picture.getOriginalFilename()!=null && picture.getOriginalFilename().trim().length()>0) {
