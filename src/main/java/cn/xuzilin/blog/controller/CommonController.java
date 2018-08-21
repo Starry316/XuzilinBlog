@@ -1,5 +1,6 @@
 package cn.xuzilin.blog.controller;
 
+import cn.xuzilin.blog.util.SessionUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,11 +21,15 @@ public class CommonController {
         return new ModelAndView("edit");
     }
     @RequestMapping("/write")
-    public ModelAndView write(){
+    public ModelAndView write(HttpServletRequest request){
         return new ModelAndView("write");
     }
     @RequestMapping("/articleList")
     public ModelAndView articleList(){
+        return new ModelAndView("articleList");
+    }
+    @RequestMapping("/articlelist")
+    public ModelAndView articlelist(){
         return new ModelAndView("articleList");
     }
 }

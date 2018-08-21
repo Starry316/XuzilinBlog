@@ -364,9 +364,9 @@
             <div class="col-lg-2 col-lg-push-6 col-md-2 col-md-push-6 col-sm-2 col-sm-push-6 starry-xsdevice-nopadding">
                 <div class="starry-boarder">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search for...">
+                        <input type="text" class="form-control" placeholder="Search for..." v-model="keyword">
                         <span class="input-group-btn">
-                        <button class="btn btn-default" type="button">搜索</button>
+                        <button class="btn btn-default" type="button" @click="search">搜索</button>
                         </span>
                     </div>
                 </div>
@@ -437,6 +437,7 @@
             isShow:false,
             loginText:'登录',
             list:[],
+            keyword:'',
             //页面控制数据
             maxPage:6,
             page:1,
@@ -446,6 +447,25 @@
             islogin:false
         },
         methods: {
+            search(){
+                if (this.keyword.length < 1){
+                    alert('请填写搜索信息');
+                    return;
+                }
+              this.$http.get('/search/'+this.keyword).then(response => {
+                  let result = response.body;
+                  if (result.status == 200) {
+                      this.list = result.data;
+                      this.page = 1;
+                      this.maxPage = 1;
+                  }
+                  else {
+                      alert(result.message);
+                  }
+              }).catch(resp => {
+                    alert("请求失败，请稍后再试");
+            });
+            },
             //查看是否登录
             checkLogin(){
                 this.$http.get('/checkLogin')

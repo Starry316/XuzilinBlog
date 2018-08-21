@@ -74,6 +74,12 @@ public class ArticleController {
         articleService.updateReadTimes(id);
         return ResponseUtil.success("success");
     }
+
+    @GetMapping("/search/{keyword}")
+    public ResponseVo search(@PathVariable("keyword") String keyword){
+        JSONArray respData = articleService.search(keyword);
+        return ResponseUtil.success("success",respData);
+    }
     /**
      * 上传新文章
      * @param request

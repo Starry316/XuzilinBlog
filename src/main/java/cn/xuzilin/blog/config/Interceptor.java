@@ -7,11 +7,13 @@ import org.apache.http.Consts;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class Interceptors implements HandlerInterceptor {
+public class Interceptor implements HandlerInterceptor {
     /**
      * preHandle方法是进行处理器拦截用的，顾名思义，该方法将在Controller处理之前进行调用，SpringMVC中的Interceptor拦截器是链式的，可以同时存在
      * 多个Interceptor，然后SpringMVC会根据声明的前后顺序一个接一个的执行，而且所有的Interceptor中的preHandle方法都会在
@@ -19,7 +21,7 @@ public class Interceptors implements HandlerInterceptor {
      * 回值为false，当preHandle的返回值为false的时候整个请求就结束了。
      */
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws UnsupportedEncodingException {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException, ServletException {
         request.setCharacterEncoding("UTF-8");
         /**
          *  以访问的jsp为：http://localhost:8080/project/course/index.jsp，工程名为/project为例：
@@ -34,14 +36,11 @@ public class Interceptors implements HandlerInterceptor {
          */
         String url = request.getServletPath();
         System.out.println("访问 url："+url);
-        //不需要登录的路径
-        if (!(url.hashCode() == "/edit".hashCode())){
-            return true;
-        }
-
-        UserPo user = SessionUtil.get(request, "loginToken", UserPo.class);
-        if (user == null)
+        UserPo user = SessionUtil.get(request, "userToken", UserPo.class);
+        if (user == null) {
+            request.getRequestDispatcher("/error").forward(request, response);
             return false;
+        }
         return true;
     }
     /**

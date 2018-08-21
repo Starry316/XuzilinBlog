@@ -83,6 +83,19 @@ public class ArticleService {
     public void updateReadTimes(long id){
         articlePoMapper.updateReadTimes(id);
     }
+    public JSONArray search(String keyword){
+        List<ArticlePo> list = articlePoMapper.search(keyword);
+        JSONArray jsonArray = new JSONArray();
+        for (ArticlePo i : list){
+            String userName = userPoMapper.selectUserNameByUserId(i.getUser_id());
+            JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(i));
+            jsonObject.remove("written_time");
+            jsonObject.put("written_time",DateUtil.formatDate(i.getWritten_time()));
+            jsonObject.put("userName",userName);
+            jsonArray.add(jsonObject);
+        }
+        return jsonArray;
+    }
     public int getMaxPage(){
         return (articlePoMapper.selectCount()+9)/10;
     }

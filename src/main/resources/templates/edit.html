@@ -385,6 +385,14 @@
         },
         methods: {
             uploadPassage(){
+                if ($('#summernote').summernote('isEmpty')) {
+                    alert('文章不能为空！');
+                    return;
+                }
+                if (this.title.length<1){
+                    alert('标题不能为空!');
+                    return;
+                }
                 this.text = $('#summernote').summernote('code');
                 let reqData = {
                     title : this.title,
@@ -530,9 +538,9 @@
         console.log(loadComplete);
             if (!loadComplete) return;
             $('#summernote').summernote({
-                height: 300,                 // 定义编辑框高度
-                minHeight: 100,             // 定义编辑框最低的高度
-                maxHeight: 300,
+                height: 500,                 // 定义编辑框高度
+                minHeight: 200,             // 定义编辑框最低的高度
+                maxHeight: 500,
                 toolbar: [
                     <!--字体工具-->
                     ['fontname', ['fontname']], //字体系列
