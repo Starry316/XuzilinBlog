@@ -370,11 +370,11 @@
                         </span>
                     </div>
                 </div>
-                <div class="thumbnail starry-boarder">
-                    <img src="/img/img_0004.jpg" alt="...">
+                <div v-if="islogin" class="thumbnail starry-boarder">
+                    <img src="/file/avatar/starry.jpg"  class="img-rounded" alt="暂无头像">
                     <div class="caption">
-                        <h3>以后做个人展示</h3>
-                        <p>...</p>
+                        <h3 v-model="userName">{{userName}}</h3>
+                        <div style="color: grey">{{userDesc}}</div>
                     </div>
                 </div>
             </div>
@@ -444,7 +444,8 @@
             //登录数据
             userName:'',
             pass:'',
-            islogin:false
+            islogin:false,
+            userDesc:'',
         },
         methods: {
             search(){
@@ -452,17 +453,17 @@
                     alert('请填写搜索信息');
                     return;
                 }
-              this.$http.get('/search/'+this.keyword).then(response => {
-                  let result = response.body;
-                  if (result.status == 200) {
-                      this.list = result.data;
-                      this.page = 1;
-                      this.maxPage = 1;
-                  }
-                  else {
-                      alert(result.message);
-                  }
-              }).catch(resp => {
+                this.$http.get('/search/'+this.keyword).then(response => {
+                    let result = response.body;
+                if (result.status == 200) {
+                    this.list = result.data;
+                    this.page = 1;
+                    this.maxPage = 1;
+                }
+                else {
+                    alert(result.message);
+                }
+            }).catch(resp => {
                     alert("请求失败，请稍后再试");
             });
             },
@@ -473,9 +474,10 @@
                     let result = response.body;
                 if (result.status === 200) {
                     this.isLogin = true;
-                    console.log(this.isLogin);
-                    this.userName = result.data;
-                    this.loginText = result.data;
+                    let data = result.data;
+                    this.userName = data.userName;
+                    this.loginText = data.userName;
+                    this.userDesc = data.user_describe;
                     $('#editPage').removeClass('starry-hide');
                 } else {
                     this.isLogin = false;

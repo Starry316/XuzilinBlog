@@ -25,7 +25,7 @@
     values (#{user_id,jdbcType=BIGINT}, #{user_name,jdbcType=VARCHAR}, #{user_password,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="cn.xuzilin.blog.po.UserPo">
+  <insert id="insertSelective" parameterType="cn.xuzilin.blog.po.UserPo" useGeneratedKeys="true" keyProperty="user_id">
     insert into user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="user_id != null">
