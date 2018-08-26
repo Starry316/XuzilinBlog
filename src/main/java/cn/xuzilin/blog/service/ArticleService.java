@@ -1,8 +1,10 @@
 package cn.xuzilin.blog.service;
 
 import cn.xuzilin.blog.dao.ArticlePoMapper;
+import cn.xuzilin.blog.dao.UserInfoPoMapper;
 import cn.xuzilin.blog.dao.UserPoMapper;
 import cn.xuzilin.blog.po.ArticlePo;
+import cn.xuzilin.blog.po.UserInfoPo;
 import cn.xuzilin.blog.po.UserPo;
 import cn.xuzilin.blog.util.DateUtil;
 import com.alibaba.fastjson.JSON;
@@ -22,6 +24,9 @@ public class ArticleService {
 
     @Resource
     private UserPoMapper userPoMapper;
+
+    @Resource
+    private UserInfoPoMapper userInfoPoMapper;
 
     /**
      * 按页数获取数据并处理数据，返回文章列表
@@ -53,6 +58,14 @@ public class ArticleService {
         JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(articlePo));
         jsonObject.remove("written_time");
         jsonObject.put("written_time",DateUtil.formatDate(articlePo.getWritten_time()));
+        UserPo author = userPoMapper.selectByPrimaryKey(articlePo.getUser_id());
+        UserInfoPo authorInfo = userInfoPoMapper.selectByPrimaryKey(articlePo.getUser_id());
+        jsonObject.put("authorDesc",authorInfo.getUser_describe());
+        jsonObject.put("authorName",author.getUser_name());
+        jsonObject.put("authorAge",authorInfo.getAge());
+        jsonObject.put("authorSigntime",DateUtil.formatDate(authorInfo.getSigntime()));
+        jsonObject.put("authorPlace",authorInfo.getPlace());
+        jsonObject.put("authorSex",authorInfo.getSex());
         return jsonObject;
     }
 

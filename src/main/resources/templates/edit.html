@@ -420,8 +420,9 @@
                 if (result.status === 200) {
                     this.isLogin = true;
                     console.log(this.isLogin);
-                    this.userName = result.data;
-                    this.loginText = result.data;
+                    let data = result.data;
+                    this.userName = data.userName;
+                    this.loginText = data.userName;
                     $('#editPage').removeClass('starry-hide');
                 } else {
                     this.isLogin = false;

@@ -395,10 +395,10 @@
             <!--右边栏-->
             <div class="col-sm-4 col-md-4 col-lg-2">
                 <div class="thumbnail starry-boarder" style="margin-top: 70px">
-                    <img src="/img/img_0004.jpg" alt="...">
+                    <img src="/file/avatar/starry.jpg"  class="img-rounded" alt="暂无头像">
                     <div class="caption">
-                        <h3>以后做个人展示</h3>
-                        <p>作者信息啥的</p>
+                        <h3>{{authorName}}</h3>
+                        <div style="color: grey">{{authorDesc}}</div>
                     </div>
                 </div>
             </div>
@@ -428,7 +428,11 @@
             //登录数据
             userName:'',
             pass:'',
-            islogin:false
+            islogin:false,
+
+            //作者信息
+            authorDesc:'',
+            authorName:''
         },
         methods: {
             deleteThis(){
@@ -474,8 +478,9 @@
                 if (result.status === 200) {
                     this.isLogin = true;
                     console.log(this.isLogin);
-                    this.userName = result.data;
-                    this.loginText = result.data;
+                    let data = result.data;
+                    this.userName = data.userName;
+                    this.loginText = data.userName;
                     this.checkAuthor();
                 } else {
                     this.isLogin = false;
@@ -583,6 +588,8 @@
                 this.article_id = data.article_id;
                 this.written_time = data.written_time;
                 this.title = data.title;
+                this.authorDesc = data.authorDesc;
+                this.authorName = data.authorName;
             }
             else {
                 alert(result.message);
